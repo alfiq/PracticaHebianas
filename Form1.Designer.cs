@@ -111,6 +111,8 @@
             // 
             // panelEntradas
             // 
+            this.panelEntradas.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelEntradas.AutoScroll = true;
             this.panelEntradas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelEntradas.Location = new System.Drawing.Point(1, 130);
@@ -121,11 +123,12 @@
             // 
             // panelSalidas
             // 
+            this.panelSalidas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelSalidas.AutoScroll = true;
             this.panelSalidas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelSalidas.Controls.Add(this.textBoxSalida);
             this.panelSalidas.Controls.Add(this.labelSalidas);
-            this.panelSalidas.Location = new System.Drawing.Point(194, 403);
+            this.panelSalidas.Location = new System.Drawing.Point(194, 404);
             this.panelSalidas.Margin = new System.Windows.Forms.Padding(2);
             this.panelSalidas.Name = "panelSalidas";
             this.panelSalidas.Size = new System.Drawing.Size(114, 54);
@@ -174,6 +177,8 @@
             // 
             // panelPesos
             // 
+            this.panelPesos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelPesos.AutoScroll = true;
             this.panelPesos.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelPesos.Location = new System.Drawing.Point(68, 131);
@@ -184,6 +189,8 @@
             // 
             // panelBias
             // 
+            this.panelBias.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelBias.AutoScroll = true;
             this.panelBias.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelBias.Location = new System.Drawing.Point(194, 133);
@@ -231,6 +238,7 @@
             // 
             // buttonEvaluar
             // 
+            this.buttonEvaluar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonEvaluar.Location = new System.Drawing.Point(230, 381);
             this.buttonEvaluar.Margin = new System.Windows.Forms.Padding(2);
             this.buttonEvaluar.Name = "buttonEvaluar";
@@ -269,7 +277,7 @@
             this.panelTipoNeurona.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelTipoNeurona.Controls.Add(this.radioButtonPerceptron);
             this.panelTipoNeurona.Controls.Add(this.radioButtonHebiana);
-            this.panelTipoNeurona.Location = new System.Drawing.Point(283, 34);
+            this.panelTipoNeurona.Location = new System.Drawing.Point(206, 36);
             this.panelTipoNeurona.Margin = new System.Windows.Forms.Padding(2);
             this.panelTipoNeurona.Name = "panelTipoNeurona";
             this.panelTipoNeurona.Size = new System.Drawing.Size(81, 41);
@@ -303,6 +311,7 @@
             // 
             // panelTheta
             // 
+            this.panelTheta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelTheta.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelTheta.Controls.Add(this.textBoxTheta);
             this.panelTheta.Controls.Add(this.labelTheta);
@@ -337,7 +346,7 @@
             this.panelIteraciones.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelIteraciones.Controls.Add(this.textBoxIteraciones);
             this.panelIteraciones.Controls.Add(this.labelIteraciones);
-            this.panelIteraciones.Location = new System.Drawing.Point(368, 35);
+            this.panelIteraciones.Location = new System.Drawing.Point(291, 37);
             this.panelIteraciones.Margin = new System.Windows.Forms.Padding(2);
             this.panelIteraciones.Name = "panelIteraciones";
             this.panelIteraciones.Size = new System.Drawing.Size(83, 39);
@@ -377,7 +386,7 @@
             this.panelError.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelError.Controls.Add(this.textBoxError);
             this.panelError.Controls.Add(this.labelError);
-            this.panelError.Location = new System.Drawing.Point(452, 35);
+            this.panelError.Location = new System.Drawing.Point(375, 37);
             this.panelError.Margin = new System.Windows.Forms.Padding(2);
             this.panelError.Name = "panelError";
             this.panelError.Size = new System.Drawing.Size(54, 39);
@@ -465,6 +474,7 @@
             // 
             // buttonLimpiar
             // 
+            this.buttonLimpiar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonLimpiar.Location = new System.Drawing.Point(82, 425);
             this.buttonLimpiar.Margin = new System.Windows.Forms.Padding(2);
             this.buttonLimpiar.Name = "buttonLimpiar";
@@ -477,7 +487,7 @@
             // labelFitness
             // 
             this.labelFitness.AutoSize = true;
-            this.labelFitness.Location = new System.Drawing.Point(14, 0);
+            this.labelFitness.Location = new System.Drawing.Point(50, 0);
             this.labelFitness.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelFitness.Name = "labelFitness";
             this.labelFitness.Size = new System.Drawing.Size(30, 13);
@@ -489,19 +499,19 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.maskedTextBoxExito);
             this.panel1.Controls.Add(this.labelFitness);
-            this.panel1.Location = new System.Drawing.Point(610, 35);
+            this.panel1.Location = new System.Drawing.Point(536, 35);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(60, 39);
+            this.panel1.Size = new System.Drawing.Size(134, 39);
             this.panel1.TabIndex = 25;
             // 
             // maskedTextBoxExito
             // 
-            this.maskedTextBoxExito.Location = new System.Drawing.Point(2, 16);
+            this.maskedTextBoxExito.Location = new System.Drawing.Point(2, 14);
             this.maskedTextBoxExito.Margin = new System.Windows.Forms.Padding(2);
             this.maskedTextBoxExito.Name = "maskedTextBoxExito";
             this.maskedTextBoxExito.ReadOnly = true;
-            this.maskedTextBoxExito.Size = new System.Drawing.Size(54, 20);
+            this.maskedTextBoxExito.Size = new System.Drawing.Size(126, 20);
             this.maskedTextBoxExito.TabIndex = 31;
             this.maskedTextBoxExito.Text = "0";
             this.maskedTextBoxExito.ValidatingType = typeof(int);
@@ -512,7 +522,7 @@
             this.panelRango.Controls.Add(this.textBoxRangoMax);
             this.panelRango.Controls.Add(this.textBoxRangoMin);
             this.panelRango.Controls.Add(this.labelRango);
-            this.panelRango.Location = new System.Drawing.Point(507, 35);
+            this.panelRango.Location = new System.Drawing.Point(430, 37);
             this.panelRango.Margin = new System.Windows.Forms.Padding(2);
             this.panelRango.Name = "panelRango";
             this.panelRango.Size = new System.Drawing.Size(102, 39);

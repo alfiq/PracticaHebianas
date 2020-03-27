@@ -16,7 +16,7 @@ namespace NeuronaHebianaLuis
         public void Init(double[] PesosEntrada,
                          double BiasEntrada)
         {
-            pesosIniciales = PesosEntrada;
+            pesosIniciales = (double[])PesosEntrada.Clone();
             pesosFinales = (double[])pesosIniciales.Clone();
             biasInicial = BiasEntrada;
             biasFinal = biasInicial;
@@ -62,7 +62,7 @@ namespace NeuronaHebianaLuis
         }
         public double[] ObtenerPesosFinales()
         {
-            return pesosFinales;
+            return (double[])pesosFinales.Clone();
         }
         public double ObtenerBiasFinal()
         {
@@ -70,7 +70,7 @@ namespace NeuronaHebianaLuis
         }
         public double[] ObtenerPesosIniciales()
         {
-            return pesosIniciales;
+            return (double[])pesosIniciales.Clone();
         }
         public double ObtenerBiasInicial()
         {

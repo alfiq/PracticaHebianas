@@ -183,21 +183,21 @@ namespace NeuronaHebianaLuis
             {
                 int numNeuronas = NH.Count;
                 int numEntradas = ((int)this.numericUpDown1.Value);
-                double exito = 0;
-                double auxExito = 0;
-                double[] mejoresPesosFinales = new double[0];
-                double[] mejoresPesosIniciales = new double[0];
+                double[] exito = new double[numNeuronas];
+                double[] auxExito = new double[numNeuronas];
                 double[] mejorBiasFinal = new double[numNeuronas];
                 double[] mejorBiasInicial =new double [numNeuronas];
-                NeuronaHebiana auxNH = new NeuronaHebiana();
+                this.maskedTextBoxExito.Text = "";
                 for (int i = 0; i < numNeuronas; i++)
                 {
+                    double[] mejoresPesosFinales = new double[0];
+                    double[] mejoresPesosIniciales = new double[0];
                     NH[i].Init(obtenerPesos().SubArray(i*numEntradas,numEntradas), obtenerBias()[i]);
-                    for (int j = 0; j < Convert.ToInt32(this.textBoxIteraciones.Text); j++)
+                    for (int iteraciones = 0; iteraciones < Convert.ToInt32(this.textBoxIteraciones.Text); iteraciones++)
                     {
-                        if (j != 0)
+                        if (iteraciones != 0)
                         {
-                            NH[i].Init(GenerarPesos().SubArray(i * numEntradas, numEntradas), GenerarBias()[i]);
+                            NH[i].Init(GenerarPesos(i,numEntradas), GenerarBias()[i]);
                         }
                         foreach (DataGridViewRow r in this.dataGridViewDatosEntrenamiento.Rows)
                         {
@@ -212,29 +212,33 @@ namespace NeuronaHebianaLuis
                             NH[i].NuevaEpoca(epochX, epochY[i]);
                         }
 
-                        exito = ObtenerSalidas(i);
-                        if (exito > auxExito)
+                        exito[i] = ObtenerSalidas(i);
+                        if (exito[i] > auxExito[i])
                         {
-                            auxNH.Init(obtenerPesos(), obtenerBias()[0]);
-                            auxExito = exito;
+                            auxExito[i] = exito[i];
 
-                            mejoresPesosFinales = NH[i].ObtenerPesosFinales();
-                            mejoresPesosIniciales = NH[i].ObtenerPesosIniciales();
+                            mejoresPesosFinales = (double[])NH[i].ObtenerPesosFinales().Clone();
+                            mejoresPesosIniciales = (double[])NH[i].ObtenerPesosIniciales().Clone();
                             mejorBiasFinal[i] = NH[i].ObtenerBiasFinal();
                             mejorBiasInicial[i] = NH[i].ObtenerBiasInicial();
 
-                            this.maskedTextBoxExito.Text = auxExito.ToString();
+                            
 
-                            if (auxExito >= 99)
+                            if (auxExito[i] == 100)
                             {
                                 break;
                             }
                         }
                     }
-                    insertarNuevosPesos(mejoresPesosFinales,i);
+                    this.maskedTextBoxExito.Text += auxExito[i].ToString() + " ";
+                    insertarNuevosPesos(mejoresPesosFinales, i);
                     insertarNuevoBias(mejorBiasFinal);
-                    RellenarPesosExitosos(mejoresPesosIniciales,i);
-                    rellenearBiasExitoso(mejorBiasInicial);
+
+                    if (Convert.ToInt32(this.textBoxIteraciones.Text) != 1)
+                    {
+                        rellenarPesosExitosos(mejoresPesosIniciales, i);
+                        rellenarBiasExitoso(mejorBiasInicial);
+                    }
                 }
             }
 
@@ -308,15 +312,15 @@ namespace NeuronaHebianaLuis
 
             return epochY;
         }
-        private double[] GenerarPesos()
+        private double[] GenerarPesos(int numNeurona,int numEntradas)
         {
-            double[] pesos = new double[numeroDeTextBox(panelPesos) / 2];
+            double[] pesos = new double[numEntradas];
             int i = 0;
             foreach (Control tb in panelPesos.Controls)
             {
                 if (tb is TextBox)
                 {
-                    if (!tb.Name.Contains("wo"))
+                    if (tb.Name.Contains("wi"+ numNeurona.ToString()))
                     {
                         double maxNumber = Convert.ToDouble(this.textBoxRangoMax.Text);
                         tb.Text = (RNG.Next() % (2 * maxNumber) - (maxNumber)).ToString();
@@ -327,7 +331,7 @@ namespace NeuronaHebianaLuis
             }
             return pesos;
         }
-        private void RellenarPesosExitosos(double[] pesos, int numNeurona)
+        private void rellenarPesosExitosos(double[] pesos, int numNeurona)
         {
             int i = 0;
             foreach (Control tb in panelPesos.Controls)
@@ -356,7 +360,8 @@ namespace NeuronaHebianaLuis
                 {
                     if (tb.Name.Contains("biasI"))
                     {
-                        tb.Text = (RNG.Next() % (2 * maxNumber) - (maxNumber)).ToString();
+                        resultingBias[i] = (RNG.Next() % (2 * maxNumber) - (maxNumber));
+                        tb.Text = resultingBias[i].ToString();
                         i++;
                     }
                 }
@@ -364,7 +369,7 @@ namespace NeuronaHebianaLuis
 
             return resultingBias;
         }
-        private void rellenearBiasExitoso(double[] bias)
+        private void rellenarBiasExitoso(double[] bias)
         {
             int i = 0;
             foreach (Control tb in this.panelBias.Controls)
@@ -723,6 +728,7 @@ namespace NeuronaHebianaLuis
                 this.Controls.Remove(c);
             }
             this.panelBias.Controls.Clear();
+
             for (int i = 0; i < numSal; i++)
             {
                 addLabel(this.panelBias, 0, i, "bias", 0);
