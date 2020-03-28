@@ -183,21 +183,27 @@ namespace NeuronaHebianaLuis
             {
                 int numNeuronas = NH.Count;
                 int numEntradas = ((int)this.numericUpDown1.Value);
+                int numIteraciones = Convert.ToInt32(this.textBoxIteraciones.Text);
                 double[] exito = new double[numNeuronas];
                 double[] auxExito = new double[numNeuronas];
-                double[] mejorBiasFinal = new double[numNeuronas];
-                double[] mejorBiasInicial =new double [numNeuronas];
                 this.maskedTextBoxExito.Text = "";
+                List<NeuronaHebiana> auxClone = new List<NeuronaHebiana>();
+                foreach (NeuronaHebiana nh in NH)
+                {
+                    auxClone.Add(nh.Clone());
+                }
                 for (int i = 0; i < numNeuronas; i++)
                 {
-                    double[] mejoresPesosFinales = new double[0];
-                    double[] mejoresPesosIniciales = new double[0];
-                    NH[i].Init(obtenerPesos().SubArray(i*numEntradas,numEntradas), obtenerBias()[i]);
-                    for (int iteraciones = 0; iteraciones < Convert.ToInt32(this.textBoxIteraciones.Text); iteraciones++)
+                    double[] nuevosPesos = obtenerPesos(i);
+                    double[] nuevosBias = obtenerBias();
+                    NH[i].Init(nuevosPesos, nuevosBias[i]);
+                    for (int iteraciones = 0; iteraciones < numIteraciones; iteraciones++)
                     {
                         if (iteraciones != 0)
                         {
-                            NH[i].Init(GenerarPesos(i,numEntradas), GenerarBias()[i]);
+                            nuevosPesos = GenerarPesos(i, numEntradas);
+                            nuevosBias = GenerarBias();
+                            NH[i].Init(nuevosPesos, nuevosBias[i]);
                         }
                         foreach (DataGridViewRow r in this.dataGridViewDatosEntrenamiento.Rows)
                         {
@@ -206,8 +212,8 @@ namespace NeuronaHebianaLuis
                                 continue;
                             }
 
-                            double[] epochX = obtenerEpochX(r);
                             double[] epochY = obtenerEpochY(r);
+                            double[] epochX = obtenerEpochX(r, epochY.Length);
 
                             NH[i].NuevaEpoca(epochX, epochY[i]);
                         }
@@ -216,13 +222,7 @@ namespace NeuronaHebianaLuis
                         if (exito[i] > auxExito[i])
                         {
                             auxExito[i] = exito[i];
-
-                            mejoresPesosFinales = (double[])NH[i].ObtenerPesosFinales().Clone();
-                            mejoresPesosIniciales = (double[])NH[i].ObtenerPesosIniciales().Clone();
-                            mejorBiasFinal[i] = NH[i].ObtenerBiasFinal();
-                            mejorBiasInicial[i] = NH[i].ObtenerBiasInicial();
-
-                            
+                            auxClone[i] = NH[i].Clone();
 
                             if (auxExito[i] == 100)
                             {
@@ -230,46 +230,49 @@ namespace NeuronaHebianaLuis
                             }
                         }
                     }
-                    this.maskedTextBoxExito.Text += auxExito[i].ToString() + " ";
-                    insertarNuevosPesos(mejoresPesosFinales, i);
-                    insertarNuevoBias(mejorBiasFinal);
 
-                    if (Convert.ToInt32(this.textBoxIteraciones.Text) != 1)
-                    {
-                        rellenarPesosExitosos(mejoresPesosIniciales, i);
-                        rellenarBiasExitoso(mejorBiasInicial);
-                    }
+                    this.maskedTextBoxExito.Text += auxExito[i].ToString() + " ";
+                    insertarNuevosPesos(auxClone[i].ObtenerPesosFinales(), i);
+                    insertarNuevoBias(auxClone[i].ObtenerBiasFinal(), i);
+                    rellenarPesosExitosos(auxClone[i].ObtenerPesosIniciales(), i);
+                    rellenarBiasExitoso(auxClone[i].ObtenerBiasInicial(), i);
+                    NH[i] = auxClone[i].Clone();
                 }
+
             }
 
             else if (this.radioButtonPerceptron.Checked)
             {
-                NP[0].Init(obtenerPesos(), Convert.ToDouble(this.textBoxTheta.Text));
-                for (int j = 0; j < Convert.ToDouble(this.textBoxIteraciones.Text); j++)
+                int numNeuronas = NP.Count;
+                double[] auxExito = new double[numNeuronas];
+                this.maskedTextBoxExito.Text = "";
+                for (int i = 0; i < numNeuronas; i++)
                 {
-                    foreach (DataGridViewRow r in this.dataGridViewDatosEntrenamiento.Rows)
+                    NP[i].Init(obtenerPesos(i), Convert.ToDouble(this.textBoxTheta.Text),EsContinua:true);
+                    for (int j = 0; j < Convert.ToDouble(this.textBoxIteraciones.Text); j++)
                     {
-                        if (r.IsNewRow)
+                        foreach (DataGridViewRow r in this.dataGridViewDatosEntrenamiento.Rows)
                         {
-                            continue;
+                            if (r.IsNewRow)
+                            {
+                                continue;
+                            }
+
+                            double[] epochY = obtenerEpochY(r);
+                            double[] epochX = obtenerEpochX(r, epochY.Length);
+
+                            NP[i].NuevaEpoca(epochX, epochY[i]);
                         }
 
-                        int len = this.dataGridViewDatosEntrenamiento.Columns.Count;
-                        double[] epoch = new double[len];
-                        for (int i = 0; i < len; i++)
-                        {
-                            epoch[i] = Convert.ToDouble(r.Cells[i].Value);
-                        }
-
-                        NP[0].NuevaEpoca(epoch.SubArray(1, len - 1).ToArray(), epoch[0]);
                     }
+                    auxExito[i] = ObtenerSalidas(i);
+                    this.maskedTextBoxExito.Text += auxExito[i].ToString() + " ";
+                    insertarNuevosPesos(NP[i].ObtenerPesosFinales(), i);
                 }
-                insertarNuevosPesos(NP[0].ObtenerPesosFinales(),0);
-                this.maskedTextBoxExito.Text = ObtenerSalidas(0).ToString();
             }
         }
 
-        private double[] obtenerEpochX(DataGridViewRow r)
+        private double[] obtenerEpochX(DataGridViewRow r,int numEntradas)
         {
 
             int lenX = 0;
@@ -286,7 +289,7 @@ namespace NeuronaHebianaLuis
 
             for (int k = 0; k < lenX; k++)
             {
-                epochX[k] = Convert.ToDouble(r.Cells[k].Value);
+                epochX[k] = Convert.ToDouble(r.Cells[k+numEntradas].Value);
             }
 
             return epochX;
@@ -323,8 +326,9 @@ namespace NeuronaHebianaLuis
                     if (tb.Name.Contains("wi"+ numNeurona.ToString()))
                     {
                         double maxNumber = Convert.ToDouble(this.textBoxRangoMax.Text);
-                        tb.Text = (RNG.Next() % (2 * maxNumber) - (maxNumber)).ToString();
-                        pesos[i] = Convert.ToDouble(tb.Text);
+                        double randNum = (RNG.Next() % (2 * maxNumber) - (maxNumber));
+                        tb.Text = randNum.ToString();
+                        pesos[i] = randNum;
                         i++;
                     }
                 }
@@ -369,37 +373,37 @@ namespace NeuronaHebianaLuis
 
             return resultingBias;
         }
-        private void rellenarBiasExitoso(double[] bias)
+        private void rellenarBiasExitoso(double bias,int numBias )
         {
             int i = 0;
             foreach (Control tb in this.panelBias.Controls)
             {
                 if (tb is TextBox)
                 {
-                    if (tb.Name.Contains("biasI"))
+                    if (tb.Name.Contains("biasI"+numBias.ToString()))
                     {
-                        tb.Text = bias[i].ToString();
+                        tb.Text = bias.ToString();
                         i++;
                     }
                 }
             }
         }
-        private double[] obtenerPesos()
+        private double[] obtenerPesos(int numNeurona)
         {
-            double[] pesos = new double[numeroDeTextBox(panelPesos) / 2];
+            List<double> pesos = new List<double>();
             int i = 0;
             foreach (Control tb in panelPesos.Controls)
             {
                 if (tb is TextBox)
                 {
-                    if (!tb.Name.Contains("wo"))
+                    if (tb.Name.Contains("wi"+ numNeurona.ToString()))
                     {
-                        pesos[i] = Convert.ToDouble(tb.Text);
+                        pesos.Add(Convert.ToDouble(tb.Text));
                         i++;
                     }
                 }
             }
-            return pesos;
+            return pesos.ToArray();
         }
         private void insertarNuevosPesos(double[] pesos,int numNeurona)
         {
@@ -416,16 +420,16 @@ namespace NeuronaHebianaLuis
                 }
             }
         }
-        private void insertarNuevoBias(double[] bias)
+        private void insertarNuevoBias(double bias,int numBias)
         {
             int i = 0;
             foreach (Control tb in this.panelBias.Controls)
             {
                 if (tb is TextBox)
                 {
-                    if (tb.Name.Contains("biasO"))
+                    if (tb.Name.Contains("biasO"+ numBias.ToString()))
                     {
-                        tb.Text = bias[i].ToString();
+                        tb.Text = bias.ToString();
                         i++;
                     }
                 }
@@ -450,10 +454,15 @@ namespace NeuronaHebianaLuis
         }
         private void buttonEvaluar_Click(object sender, EventArgs e)
         {
-            if (this.radioButtonHebiana.Checked)
-                this.textBoxSalida.Text = NH[0].obtenerSalida(ObtenerEntradas()).ToString();
-            else
-                this.textBoxSalida.Text = NP[0].obtenerSalida(ObtenerEntradas()).ToString();
+            this.textBoxSalida.Text = "";
+            int numNeuronas = (int)this.numericUpDownNumeroSalidas.Value;
+            for (int i = 0; i < numNeuronas; i++)
+            {
+                if (this.radioButtonHebiana.Checked)
+                    this.textBoxSalida.Text += NH[i].obtenerSalida(ObtenerEntradas()).ToString() + " ,";
+                else
+                    this.textBoxSalida.Text += NP[i].obtenerSalida(ObtenerEntradas()).ToString() + " ,";
+            }
         }
         private double[] ObtenerEntradas()
         {
@@ -482,10 +491,14 @@ namespace NeuronaHebianaLuis
                         continue;
                     }
 
-                    bool CorrectValue = (NH[numSalida].funcionDeExitacion(NH[numSalida].obtenerSalida(obtenerEpochX(r)))
-                        == NH[numSalida].funcionDeExitacion(obtenerEpochY(r)[numSalida]));
-                    this.dataGridViewSalidasPrueba.Rows[j].Cells[numSalida].Value = CorrectValue.ToString();
-                    if (CorrectValue)
+                    double[] epochY = obtenerEpochY(r);
+                    double[] epochX = obtenerEpochX(r,epochY.Length);
+
+                    double correctValue = NH[numSalida].obtenerSalida(epochX);
+                    double expectedValue = obtenerEpochY(r)[numSalida];
+                    bool isCorrect = correctValue == expectedValue;
+                    this.dataGridViewSalidasPrueba.Rows[j].Cells[numSalida].Value = isCorrect.ToString();
+                    if (isCorrect)
                     {
                         isTrained += 100.0 / (this.dataGridViewDatosEntrenamiento.RowCount - 1);
                         if (isTrained == 100)
@@ -502,28 +515,34 @@ namespace NeuronaHebianaLuis
             if (this.radioButtonPerceptron.Checked)
             {
                 int j = 0;
+                double err = Convert.ToDouble(this.textBoxError.Text);
                 foreach (DataGridViewRow r in this.dataGridViewDatosEntrenamiento.Rows)
                 {
                     if (r.IsNewRow)
                     {
                         continue;
                     }
-                    int len = this.dataGridViewDatosEntrenamiento.Columns.Count;
-                    double[] epoch = new double[len];
-                    for (int i = 0; i < len; i++)
-                    {
-                        epoch[i] = Convert.ToDouble(r.Cells[i].Value);
-                    }
-                    double realValue = NP[0].obtenerSalida(epoch.SubArray(1, len - 1).ToArray());
-                    double expectedValue = epoch[0];
-                    bool CorrectValue = Math.Abs(realValue - expectedValue) < Convert.ToDouble(this.textBoxError.Text);
-                    this.dataGridViewSalidasPrueba.Rows[j].Cells[0].Value = CorrectValue.ToString();
-                    if (CorrectValue)
+
+                    double[] epochY = obtenerEpochY(r);
+                    double[] epochX = obtenerEpochX(r, epochY.Length);
+
+                    double correctValue = NP[numSalida].obtenerSalida(epochX);
+                    double expectedValue = obtenerEpochY(r)[numSalida];
+                    bool isCorrect = err > Math.Abs(correctValue - expectedValue);
+                    this.dataGridViewSalidasPrueba.Rows[j].Cells[numSalida].Value = isCorrect.ToString();
+                    if (isCorrect)
                     {
                         isTrained += 100.0 / (this.dataGridViewDatosEntrenamiento.RowCount - 1);
+                        if (isTrained == 100)
+                        {
+                            return isTrained;
+                        }
                     }
+
                     j++;
                 }
+                return isTrained;
+            
             }
             return isTrained;
         }
@@ -737,6 +756,10 @@ namespace NeuronaHebianaLuis
             }
         }
 
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 
 

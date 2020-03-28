@@ -213,7 +213,7 @@
             this.dataGridViewDatosEntrenamiento.Name = "dataGridViewDatosEntrenamiento";
             this.dataGridViewDatosEntrenamiento.RowHeadersWidth = 5;
             this.dataGridViewDatosEntrenamiento.RowTemplate.Height = 24;
-            this.dataGridViewDatosEntrenamiento.Size = new System.Drawing.Size(182, 361);
+            this.dataGridViewDatosEntrenamiento.Size = new System.Drawing.Size(225, 361);
             this.dataGridViewDatosEntrenamiento.TabIndex = 13;
             this.dataGridViewDatosEntrenamiento.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDatosEntrenamiento_CellEndEdit);
             this.dataGridViewDatosEntrenamiento.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridViewDatosEntrenamiento_RowsAdded);
@@ -257,7 +257,7 @@
             this.dataGridViewSalidasPrueba.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewSalidasPrueba.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1});
-            this.dataGridViewSalidasPrueba.Location = new System.Drawing.Point(500, 95);
+            this.dataGridViewSalidasPrueba.Location = new System.Drawing.Point(543, 95);
             this.dataGridViewSalidasPrueba.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridViewSalidasPrueba.Name = "dataGridViewSalidasPrueba";
             this.dataGridViewSalidasPrueba.RowHeadersWidth = 5;
@@ -453,9 +453,10 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(688, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(731, 24);
             this.menuStrip1.TabIndex = 29;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // archivoToolStripMenuItem
             // 
@@ -584,7 +585,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(688, 465);
+            this.ClientSize = new System.Drawing.Size(731, 465);
             this.Controls.Add(this.numericUpDownNumeroSalidas);
             this.Controls.Add(this.labelNumeroSalidas);
             this.Controls.Add(this.panelRango);

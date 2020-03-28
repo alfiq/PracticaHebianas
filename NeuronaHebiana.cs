@@ -23,6 +23,16 @@ namespace NeuronaHebianaLuis
 
         }
 
+        public NeuronaHebiana Clone()
+        {
+            NeuronaHebiana other = (NeuronaHebiana)this.MemberwiseClone();
+            other.pesosIniciales =(double[]) pesosIniciales.Clone();
+            other.pesosFinales = (double[]) pesosFinales.Clone();
+            other.biasInicial = biasInicial;
+            other.biasFinal = biasFinal;
+            return other;
+        }
+
         public void NuevaEpoca(double[] Entradas,double Salida)
         {
             for (int i  = 0;i<pesosIniciales.Length;i++)
